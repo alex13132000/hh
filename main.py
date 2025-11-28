@@ -1,11 +1,14 @@
 import pygame
 
-import player
+import player_control
 
 pygame.init()
 screen = pygame.display.set_mode((420, 720))
 clock = pygame.time.Clock()
 running = True
+
+player = player_control.Player(screen)
+
 
 while running:
     for event in pygame.event.get():
