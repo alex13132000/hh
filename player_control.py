@@ -12,11 +12,14 @@ class Player:
         - Ограничение движения нижней частью экрана.
     """
 
-    position = None
+    position_x = 200
+    position_y = 600
     image = None
     screen = None
 
-    def __init__(self, screen):
+    def __init__(self, screen, position_x, position_y):
+        self.position_x = position_x
+        self.position_y = position_y
         self.screen = screen
         self._load_image()
         self._spawn()
@@ -44,7 +47,8 @@ class Player:
 
     def draw(self):
         # Отрисовка корабля игрока на экране
-        self.screen.blit(self.image, self.position)
+        self.screen.blit(self.image, self.position_x, self.position_y)
 
     def _spawn(self):
-        ...
+        self.position_y = 600
+        self.position_x = 200
