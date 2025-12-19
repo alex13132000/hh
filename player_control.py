@@ -4,7 +4,7 @@
 import pygame
 
 
-SHIP_IMAGE_FILE = 'assets/player.png'
+SHIP_IMAGE_FILE = 'assets/images/player_ship/player.png'
 
 class Player:
     """Корабль игрока.
