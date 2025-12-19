@@ -47,7 +47,10 @@ class Player:
 
     def draw(self):
         # Отрисовка корабля игрока на экране
-        self.screen.blit(self.image, self.position_x, self.position_y)
+        self.screen.blit(
+            source=self.image,
+            dest=(self.position_x, self.position_y),
+        )
 
     def _spawn(self):
         self.position_y = 600
