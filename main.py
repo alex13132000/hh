@@ -20,6 +20,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
     screen.blit(pygame.image.load(BG), (0, 0))
+    player.input()
     player.draw()
     pygame.display.flip()
     clock.tick(60)

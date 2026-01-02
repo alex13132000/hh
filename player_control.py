@@ -5,6 +5,8 @@ import pygame
 
 
 SHIP_IMAGE_FILE = 'assets/images/player_ship/player.png'
+PLAYER_ZONE = (16, 368, 300, 684)
+
 
 class Player:
     """Корабль игрока.
@@ -25,8 +27,35 @@ class Player:
         self._load_image()
         self._spawn()
 
+    def _move(self, speed, axis='h'):
+        saved = self.position_x, self.position_y
+        if axis == 'h':
+            coords = self.position_x
+        else:
+            coords = self.position_y
+        coords += self.speed
+        if (
+            self.position_x < PLAYER_ZONE[0] and
+            self.position_x > PLAYER_ZONE[1] and
+            self.position_y < PLAYER_ZONE[2] and
+            self.position_y > PLAYER_ZONE[3]
+        ):
+            pass
+        else:
+            self.position_x, self.position_y = saved
+
     def input(self):
-        ...
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_a]:
+            self._move(-self.speed, 'x')
+        if keys[pygame.K_d]:
+            self._move(self.speed, 'x')
+        if keys[pygame.K_w]:
+            self._move(-self.speed, 'y')
+        if keys[pygame.K_s]:
+            self._move(self.speed, 'y')
+
 
     def move_right(self):
         ...
@@ -52,26 +81,6 @@ class Player:
             source=self.image,
             dest=(self.position_x, self.position_y),
         )
-        keys = pygame.key.get_pressed()
-
-        if keys[pygame.K_a]:
-            self.position_x -= self.speed
-        if keys[pygame.K_d]:
-            self.position_x += self.speed
-        if keys[pygame.K_w]:
-            self.position_y -= self.speed
-        if keys[pygame.K_s]:
-            self.position_y += self.speed
-
-        if self.position_x < 16:
-            self.position_x = 16
-        if self.position_x > 368:
-            self.position_x = 368
-
-        if self.position_y < 300:
-            self.position_y = 300
-        if self.position_y > 684:
-            self.position_y = 684
 
     def _spawn(self):
         self.position_y = 600
