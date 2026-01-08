@@ -19,6 +19,7 @@ class Player:
     image = None
     screen = None
     speed = 5
+    player_rect = (position_x, position_y, 36, 36)
 
     def __init__(self, screen, position_x, position_y):
         self.position_x = position_x
@@ -26,23 +27,23 @@ class Player:
         self.screen = screen
         self._load_image()
         self._spawn()
+        self.image = pygame.image.load(SHIP_IMAGE_FILE)
+        #self.rect = self.image.get_rect(topleft=(position_x, position_y))
 
-    def _move(self, speed, axis='h'):
-        saved = self.position_x, self.position_y
-        if axis == 'h':
-            coords = self.position_x
-        else:
-            coords = self.position_y
-        coords += self.speed
-        if (
-            self.position_x < PLAYER_ZONE[0] and
-            self.position_x > PLAYER_ZONE[1] and
-            self.position_y < PLAYER_ZONE[2] and
-            self.position_y > PLAYER_ZONE[3]
+    def _move(self, speed, axis='x'):
+        saved_x, saved_y = self.position_x, self.position_y
+
+        if axis == 'x':
+            self.position_x += speed
+        elif axis == 'y':
+            self.position_y += speed
+
+        # Ограничение зоны движения
+        if not (
+            PLAYER_ZONE[0] <= self.position_x <= PLAYER_ZONE[1] and
+            PLAYER_ZONE[2] <= self.position_y <= PLAYER_ZONE[3]
         ):
-            pass
-        else:
-            self.position_x, self.position_y = saved
+            self.position_x, self.position_y = saved_x, saved_y
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -56,24 +57,13 @@ class Player:
         if keys[pygame.K_s]:
             self._move(self.speed, 'y')
 
-
-    def move_right(self):
-        ...
-
-    def move_left(self):
-        ...
-
-    def move_up(self):
-        ...
-
-    def move_down(self):
-        ...
-
     def shoot(self):
         ...
 
     def _load_image(self):
-        self.image = pygame.image.load(SHIP_IMAGE_FILE)
+        ...
+        #self.image = pygame.image.load(SHIP_IMAGE_FILE)
+        
 
     def draw(self):
         # Отрисовка корабля игрока на экране
