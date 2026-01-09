@@ -3,7 +3,11 @@ import pygame
 import player_control
 
 
-BG = "assets/images/BG/BG_1.png"
+#BG = "assets/images/BG/BG_1.png"
+# Закончить коструктор класса Background из background.py и использовать его здесь
+# Конструктор должен грузить фон
+# Метод draw - рисовать его на экран каждый кадр
+# В этом же файле main.py создать объект Background и использовать его для отрисовки фона
 
 
 pygame.init()
@@ -19,7 +23,6 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    screen.blit(pygame.image.load(BG), (0, 0))
     player.input()
     player.draw()
     pygame.display.flip()

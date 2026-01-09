@@ -25,7 +25,6 @@ class Player:
         self.position_x = position_x
         self.position_y = position_y
         self.screen = screen
-        self._load_image()
         self._spawn()
         self.image = pygame.image.load(SHIP_IMAGE_FILE)
         #self.rect = self.image.get_rect(topleft=(position_x, position_y))
@@ -59,11 +58,6 @@ class Player:
 
     def shoot(self):
         ...
-
-    def _load_image(self):
-        ...
-        #self.image = pygame.image.load(SHIP_IMAGE_FILE)
-        
 
     def draw(self):
         # Отрисовка корабля игрока на экране
