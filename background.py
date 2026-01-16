@@ -1,7 +1,8 @@
 import pygame
 
 class Background:
-    def init(self, image_path, speed=2):
+
+    def __init__(self, image_path, speed=2):
         self.image = pygame.image.load(image_path)
         self.speed = speed
         self.y = 0
