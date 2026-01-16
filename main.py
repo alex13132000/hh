@@ -1,8 +1,8 @@
 import pygame
 
+import background
 import player_control
 
-import background
 
 
 #BG = "assets/images/BG/BG_1.png"
@@ -18,15 +18,15 @@ clock = pygame.time.Clock()
 running = True
 
 player = player_control.Player(screen, 200, 200)
-
+bg = background.Background()
 
 while running:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    background.update()
-    background.draw(screen)
+    bg.update()
+    bg.draw(screen)
     player.input()
     player.draw()
     pygame.display.flip()
