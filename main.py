@@ -2,6 +2,8 @@ import pygame
 
 import player_control
 
+import background
+
 
 #BG = "assets/images/BG/BG_1.png"
 # Закончить коструктор класса Background из background.py и использовать его здесь
@@ -23,6 +25,8 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+    background.update()
+    background.draw(screen)
     player.input()
     player.draw()
     pygame.display.flip()
