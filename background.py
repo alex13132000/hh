@@ -7,12 +7,19 @@ class Background:
 
 
     def __init__(self, image_path=BG_FILE, speed=2):
+        self.speed = speed
+        self.y = 0
+        self.image = pygame.image.load(image_path)
+        self.height = self.image.get_height()
         # self.image = pygame.image.load(image_path)
-        image = pygame.image.load(image_path)
-        flip_image = pygame.transform.flip(image, False, True)
-        bg_size = image.get_size()
+        
+        flip_image = pygame.transform.flip(self.image, True, True)
+        bg_size = self.image.get_size()
         bg_fin = (bg_size[0], bg_size[1] * 2)
-        big_bg = pygame.Surface(bg_fin)
+        self.big_bg = pygame.Surface(bg_fin)
+        self.big_bg.blit(self.image, (0, 0))
+        self.big_bg.blit(flip_image, (0, self.height))
+
         #----------------------------------------------------
         # Запердолить в эту поверхность 2 фона
         #----------------------------------------------------
