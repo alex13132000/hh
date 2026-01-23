@@ -13,7 +13,7 @@ class Background:
         self.height = self.image.get_height()
         # self.image = pygame.image.load(image_path)
         
-        flip_image = pygame.transform.flip(self.image, True, True)
+        flip_image = pygame.transform.flip(self.image, True, False)
         bg_size = self.image.get_size()
         bg_fin = (bg_size[0], bg_size[1] * 2)
         self.big_bg = pygame.Surface(bg_fin)
