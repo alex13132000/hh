@@ -3,7 +3,7 @@
 
 import pygame
 
-
+PLAYER_BULLET = 'assets/images/player_ship/bullet_P.png'
 SHIP_IMAGE_FILE = 'assets/images/player_ship/player.png'
 PLAYER_ZONE = (16, 368, 300, 684)
 
@@ -56,8 +56,18 @@ class Player:
         if keys[pygame.K_s]:
             self._move(self.speed, 'y')
 
-    def shoot(self):
-        ...
+    def shoot(self, image_bullet = pygame.image.load(PLAYER_BULLET), speed_bullet = 10):
+        self.speed_bullet = speed_bullet
+        self.image_bullet = image_bullet
+
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_SPACE]:
+            self.screen.blit(
+            source=self.image_bullet,
+            dest=(self.position_x+4, self.position_y-18),
+        )
+
 
     def draw(self):
         # Отрисовка корабля игрока на экране
