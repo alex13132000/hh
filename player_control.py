@@ -2,8 +2,8 @@
 """
 
 import pygame
+import bullet
 
-PLAYER_BULLET = 'assets/images/player_ship/bullet_P.png'
 SHIP_IMAGE_FILE = 'assets/images/player_ship/player.png'
 PLAYER_ZONE = (16, 368, 300, 684)
 
@@ -13,7 +13,7 @@ class Player:
         - Класс спрайта с позицией, движением (влево/вправо) и стрельбой.
         - Ограничение движения нижней частью экрана.
     """
-
+    bullets = []
     position_x = 200
     position_y = 600
     image = None
@@ -55,18 +55,18 @@ class Player:
             self._move(-self.speed, 'y')
         if keys[pygame.K_s]:
             self._move(self.speed, 'y')
-
-    def shoot(self, image_bullet = pygame.image.load(PLAYER_BULLET), speed_bullet = 10):
-        self.speed_bullet = speed_bullet
-        self.image_bullet = image_bullet
-
-        keys = pygame.key.get_pressed()
-
         if keys[pygame.K_SPACE]:
-            self.screen.blit(
-            source=self.image_bullet,
-            dest=(self.position_x+4, self.position_y-18),
+            self._shoot()
+
+
+    def _shoot(self):
+        b = bullet.Bullet(
+            self.position_x + 4,
+            self.position_y - 18,
+            self.screen,
         )
+        self.bullets.append(b)
+
 
 
     def draw(self):
@@ -75,6 +75,9 @@ class Player:
             source=self.image,
             dest=(self.position_x, self.position_y),
         )
+        for b in self.bullets:
+            b.update()
+            b.draw()
 
     def _spawn(self):
         self.position_y = 600

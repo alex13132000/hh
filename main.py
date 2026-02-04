@@ -22,7 +22,6 @@ while running:
     bg.draw()
     player.input()
     player.draw()
-    player.shoot()
     pygame.display.flip()
     clock.tick(60)
 
