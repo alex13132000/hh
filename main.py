@@ -1,23 +1,19 @@
 import pygame
 
-import background
-import player_control
-
+from scene import Scene
 
 pygame.init()
-
 screen = pygame.display.set_mode((420, 720))
 clock = pygame.time.Clock()
-running = True
 
-player = player_control.Player(screen, 200, 200)
-bg = background.Background(screen)
+scene = Scene(screen)
 
-while running:
+is_running = True
+while is_running:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False
+            is_running = False
     bg.update()
     bg.draw()
     player.input()

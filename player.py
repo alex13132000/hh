@@ -6,24 +6,24 @@ import bullet
 
 SHIP_IMAGE_FILE = 'assets/images/player_ship/player.png'
 PLAYER_ZONE = (16, 368, 300, 684)
-
+SPAWN = [200, 600]
 
 class Player:
     """Корабль игрока.
         - Класс спрайта с позицией, движением (влево/вправо) и стрельбой.
         - Ограничение движения нижней частью экрана.
     """
-    bullets = []
-    position_x = 200
-    position_y = 600
-    image = None
-    screen = None
-    speed = 5
-    player_rect = (position_x, position_y, 36, 36)
+    # bullets = []
+    # position_x = SPAWN[0]
+    # position_y = SPAWN[1]
+    # image = None
+    # screen = None
+    # speed = 5
+    # player_rect = (position_x, position_y, 36, 36)
 
-    def __init__(self, screen, position_x, position_y):
-        self.position_x = position_x
-        self.position_y = position_y
+    def __init__(self, screen):
+        self.position_x = SPAWN[0]
+        self.position_y = SPAWN[1]
         self.screen = screen
         self._spawn()
         self.image = pygame.image.load(SHIP_IMAGE_FILE)
