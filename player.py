@@ -7,6 +7,7 @@ import bullet
 SHIP_IMAGE_FILE = 'assets/images/player_ship/player.png'
 PLAYER_ZONE = (16, 368, 300, 684)
 SPAWN = [200, 600]
+SPEED = 5
 
 class Player:
     """Корабль игрока.
@@ -18,7 +19,6 @@ class Player:
     # position_y = SPAWN[1]
     # image = None
     # screen = None
-    # speed = 5
     # player_rect = (position_x, position_y, 36, 36)
 
     def __init__(self, screen):
@@ -44,17 +44,17 @@ class Player:
         ):
             self.position_x, self.position_y = saved_x, saved_y
 
-    def input(self):
+    def update(self):
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_a]:
-            self._move(-self.speed, 'x')
+            self._move(-SPEED, 'x')
         if keys[pygame.K_d]:
-            self._move(self.speed, 'x')
+            self._move(SPEED, 'x')
         if keys[pygame.K_w]:
-            self._move(-self.speed, 'y')
+            self._move(-SPEED, 'y')
         if keys[pygame.K_s]:
-            self._move(self.speed, 'y')
+            self._move(SPEED, 'y')
         if keys[pygame.K_SPACE]:
             self._shoot()
 
@@ -75,9 +75,9 @@ class Player:
             source=self.image,
             dest=(self.position_x, self.position_y),
         )
-        for b in self.bullets:
-            b.update()
-            b.draw()
+        # for b in self.bullets:
+        #     b.update()
+        #     b.draw()
 
     def _spawn(self):
         self.position_y = 600
