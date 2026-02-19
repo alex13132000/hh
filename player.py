@@ -2,7 +2,6 @@
 """
 
 import pygame
-import bullet
 
 SHIP_IMAGE_FILE = 'assets/images/player_ship/player.png'
 PLAYER_ZONE = (16, 368, 300, 684)
@@ -14,12 +13,7 @@ class Player:
         - Класс спрайта с позицией, движением (влево/вправо) и стрельбой.
         - Ограничение движения нижней частью экрана.
     """
-    # bullets = []
-    # position_x = SPAWN[0]
-    # position_y = SPAWN[1]
-    # image = None
-    # screen = None
-    # player_rect = (position_x, position_y, 36, 36)
+
 
     def __init__(self, screen):
         self.position_x = SPAWN[0]
@@ -58,27 +52,13 @@ class Player:
         if keys[pygame.K_SPACE]:
             self._shoot()
 
-
-    def _shoot(self):
-        b = bullet.Bullet(
-            self.position_x + 4,
-            self.position_y - 18,
-            self.screen,
-        )
-        self.bullets.append(b)
-
-
-
     def draw(self):
         # Отрисовка корабля игрока на экране
         self.screen.blit(
             source=self.image,
             dest=(self.position_x, self.position_y),
         )
-        # for b in self.bullets:
-        #     b.update()
-        #     b.draw()
-
+        
     def _spawn(self):
         self.position_y = 600
         self.position_x = 200
