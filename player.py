@@ -3,24 +3,26 @@
 
 import pygame
 
-SHIP_IMAGE_FILE = 'assets/images/player_ship/player.png'
-PLAYER_ZONE = (16, 368, 300, 684)
+
+IMG = 'assets/images/player_ship/player.png'
+ZONE = (16, 368, 300, 684)
 SPAWN = [200, 600]
 SPEED = 5
+SHOT_DELAY = 30
+
 
 class Player:
     """Корабль игрока.
         - Класс спрайта с позицией, движением (влево/вправо) и стрельбой.
         - Ограничение движения нижней частью экрана.
     """
-
-
-    def __init__(self, screen):
+    def __init__(self, scene):
+        self.last_shot = SHOT_DELAY
         self.position_x = SPAWN[0]
         self.position_y = SPAWN[1]
-        self.screen = screen
+        self.scene = scene
         self._spawn()
-        self.image = pygame.image.load(SHIP_IMAGE_FILE)
+        self.image = pygame.image.load(IMG)
         #self.rect = self.image.get_rect(topleft=(position_x, position_y))
 
     def _move(self, speed, axis='x'):
@@ -33,14 +35,19 @@ class Player:
 
         # Ограничение зоны движения
         if not (
-            PLAYER_ZONE[0] <= self.position_x <= PLAYER_ZONE[1] and
-            PLAYER_ZONE[2] <= self.position_y <= PLAYER_ZONE[3]
+            ZONE[0] <= self.position_x <= ZONE[1] and
+            ZONE[2] <= self.position_y <= ZONE[3]
         ):
             self.position_x, self.position_y = saved_x, saved_y
 
-    def update(self):
-        keys = pygame.key.get_pressed()
+    def _shoot(self):
+        if self.last_shot > SHOT_DELAY:
+            self.scene.shoot()
+            self.last_shot = 0
 
+    def update(self):
+        self.last_shot += 1
+        keys = pygame.key.get_pressed()
         if keys[pygame.K_a]:
             self._move(-SPEED, 'x')
         if keys[pygame.K_d]:
@@ -54,11 +61,12 @@ class Player:
 
     def draw(self):
         # Отрисовка корабля игрока на экране
-        self.screen.blit(
+        self.scene.screen.blit(
             source=self.image,
             dest=(self.position_x, self.position_y),
         )
-        
+
     def _spawn(self):
         self.position_y = 600
         self.position_x = 200
+

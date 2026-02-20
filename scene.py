@@ -1,40 +1,45 @@
 import pygame
 
 import background
-import player
 import bullet
+import player
 
 
 WIDTH, HEIGHT = 420, 720
 TICK = 60
 
+
 class Scene:
     def __init__(self):
         pygame.init()
-        self.clock = pygame.time.Clock()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
-        self.background = background.Background(self.screen)
-        self.player = player.Player(self.screen)
-        self.bullet = bullet.Bullet(self.player.position_x, self.player.position_y, self.screen)
-        self.bullets = []
-        self.enemies = []
-        self.enemy_bullets = []
-        self.hp = []
+        self._background = background.Background(self)
+        self._bullets = []
+        self._clock = pygame.time.Clock()
+        self._enemies = []
+        self._enemy_bullets = []
+        self._hp = []
+        self._player = player.Player(self)
 
+    def shoot(self):
+        self._bullets.append(
+            bullet.Bullet(self, self._player.position_x, self._player.position_y)
+        )
+
+    def remove_bullet(self, bullet):
+        self._bullets.remove(bullet)
 
     def update(self):
-        self.background.update()
-        self.player.update()
-        self.bullet.update()
+        self._background.update()
+        self._player.update()
+        for b in self._bullets:
+            b.update()
 
     def draw(self):
-        self.background.draw()
-        self.player.draw()
-        if pygame.key.get_pressed(pygame.K_SPACE):
-            b = bullet.Bullet(self.player.position_x, self.player.position_y, self.screen)
-            self.bullets.append(b)
-            for b in self.bullets:
-                b.draw(self.screen)
+        self._background.draw()
+        self._player.draw()
+        for b in self._bullets:
+            b.draw()
 
     def run(self):
         while True:
@@ -44,5 +49,5 @@ class Scene:
             self.update()
             self.draw()
             pygame.display.flip()
-            self.clock.tick(TICK)
+            self._clock.tick(TICK)
 

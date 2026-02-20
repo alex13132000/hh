@@ -1,15 +1,15 @@
 import pygame
 
 
-BG_FILE = 'assets/images/BG/BG_1.png'
+IMG = 'assets/images/BG/BG_1.png'
+SPEED = 2
 
 
 class Background:
-    def __init__(self, screen, image_path=BG_FILE, speed=2):
-        self.screen = screen
-        self.speed = speed
+    def __init__(self, scene):
+        self.scene = scene
         self.y = 0
-        image = pygame.image.load(image_path)
+        image = pygame.image.load(IMG)
         image_size = image.get_size()
         self.height = image_size[1] * 2
         self.bg = pygame.Surface((image_size[0], self.height))
@@ -24,10 +24,10 @@ class Background:
         )
 
     def update(self):
-        self.y += self.speed
+        self.y += SPEED
         if self.y >= self.height:
             self.y = 0
 
     def draw(self):
-        self.screen.blit(source=self.bg, dest=(0, self.y))
-        self.screen.blit(source=self.bg, dest=(0, self.y - self.height))
+        self.scene.screen.blit(source=self.bg, dest=(0, self.y))
+        self.scene.screen.blit(source=self.bg, dest=(0, self.y - self.height))
