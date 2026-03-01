@@ -9,7 +9,7 @@ ZONE = (16, 368, 300, 684)
 SPAWN = [200, 600]
 SPEED = 5
 SHOT_DELAY = 30
-
+SHOT_MP3 = 'assets/musics/shot.mp3'
 
 class Player:
     """Корабль игрока.
@@ -23,6 +23,7 @@ class Player:
         self.scene = scene
         self._spawn()
         self.image = pygame.image.load(IMG)
+        self.shot_mp3 = pygame.mixer.Sound(SHOT_MP3)
         #self.rect = self.image.get_rect(topleft=(position_x, position_y))
 
     def _move(self, speed, axis='x'):
@@ -44,6 +45,7 @@ class Player:
         if self.last_shot > SHOT_DELAY:
             self.scene.shoot()
             self.last_shot = 0
+            self.shot_mp3.play()
 
     def update(self):
         self.last_shot += 1
