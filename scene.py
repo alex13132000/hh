@@ -10,6 +10,7 @@ WIDTH, HEIGHT = 420, 720
 TICK = 60
 ENEMY_DELAY = 90
 BG_MUSIC = 'assets/musics/music_BG.mp3'
+PLAYER_ZONE = 16, 368, 284, 360
 
 class Scene:
     def __init__(self):
@@ -23,6 +24,7 @@ class Scene:
         self.last_enemy = 0
         pygame.mixer.music.load(BG_MUSIC)
         pygame.mixer.music.play(loops=-1)
+        self.player_zone = pygame.Rect(*PLAYER_ZONE)
 
     def shoot(self):
         self._transients.append(

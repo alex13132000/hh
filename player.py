@@ -5,7 +5,6 @@ import pygame
 
 
 IMG = 'assets/images/player_ship/player.png'
-ZONE = (16, 368, 300, 684)
 SPAWN = [200, 600]
 SPEED = 5
 SHOT_DELAY = 30
@@ -18,15 +17,15 @@ class Player:
     """
     def __init__(self, scene):
         self.last_shot = SHOT_DELAY
-        self.position_x = SPAWN[0]
-        self.position_y = SPAWN[1]
         self.scene = scene
         self._spawn()
         self.image = pygame.image.load(IMG)
+        self.rect = self.image.get_rect()  # TODO: рассчитать середину player_zone для начальной позиции
         self.shot_mp3 = pygame.mixer.Sound(SHOT_MP3)
         #self.rect = self.image.get_rect(topleft=(position_x, position_y))
 
     def _move(self, speed, axis='x'):
+        # TODO использовать self.rect scene.player_zone для ограничения движения
         saved_x, saved_y = self.position_x, self.position_y
 
         if axis == 'x':
