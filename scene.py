@@ -9,6 +9,7 @@ import enemy
 WIDTH, HEIGHT = 420, 720
 TICK = 60
 ENEMY_DELAY = 90
+BG_MUSIC = 'assets/musics/music_BG.mp3'
 
 class Scene:
     def __init__(self):
@@ -20,6 +21,8 @@ class Scene:
         self._transients = []
         self._player = player.Player(self)
         self.last_enemy = 0
+        pygame.mixer.music.load(BG_MUSIC)
+        pygame.mixer.music.play(loops=-1)
 
     def shoot(self):
         self._transients.append(
