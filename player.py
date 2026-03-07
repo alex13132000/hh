@@ -18,16 +18,11 @@ class Player:
         self.shot_mp3 = pygame.mixer.Sound(SHOT_MP3)
         self.rect = self.image.get_rect(topleft=(self.position_x, self.position_y))
 
-    def _move(self, SPEED, axis='x'):
+    def _move(self):
         # TODO использовать self.rect scene.player_zone для ограничения движения
         saved_rect = self.rect
-        
-        if axis == 'x':
-            self.rect += SPEED
-        elif axis == 'y':
-            self.rect += SPEED
+        self.rect = self.rect.move(SPEED)
 
-        # Ограничение зоны движения
         if not self.scene.player_zone.contains(self.rect):
             self.rect = saved_rect
 
@@ -41,13 +36,13 @@ class Player:
         self.last_shot += 1
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a]:
-            self._move(-SPEED, 'x')
+            self._move(SPEED)
         if keys[pygame.K_d]:
-            self._move(SPEED, 'x')
+            self._move(-SPEED)
         if keys[pygame.K_w]:
-            self._move(-SPEED, 'y')
+            self._move(-SPEED)
         if keys[pygame.K_s]:
-            self._move(SPEED, 'y')
+            self._move(SPEED)
         if keys[pygame.K_SPACE]:
             self._shoot()
 
