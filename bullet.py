@@ -5,6 +5,7 @@ IMG = 'assets/images/player_ship/bullet_P.png'
 SPEED = 10
 BOUNDARY = -20
 
+# Rect(object) -> Rect
 
 class Bullet:
     def __init__(self, scene, position_x, position_y):

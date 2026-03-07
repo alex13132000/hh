@@ -1,6 +1,7 @@
-import pygame
+"""Модуль класса Player.
+"""
 
-import scene
+import pygame
 
 
 IMG = 'assets/images/player_ship/player.png'
@@ -10,26 +11,34 @@ SHOT_DELAY = 30
 SHOT_MP3 = 'assets/musics/shot.mp3'
 
 class Player:
+    """Корабль игрока.
+        - Класс спрайта с позицией, движением (влево/вправо) и стрельбой.
+        - Ограничение движения нижней частью экрана.
+    """
     def __init__(self, scene):
         self.last_shot = SHOT_DELAY
         self.scene = scene
         self._spawn()
-        self.image = pygame.image.load(IMG)  # TODO: рассчитать середину player_zone для начальной позиции
+        self.image = pygame.image.load(IMG)
+        self.rect = self.image.get_rect()  # TODO: рассчитать середину player_zone для начальной позиции
         self.shot_mp3 = pygame.mixer.Sound(SHOT_MP3)
-        self.rect = self.image.get_rect(topleft=(self.position_x, self.position_y))
+        #self.rect = self.image.get_rect(topleft=(position_x, position_y))
 
-    def _move(self, SPEED, axis='x'):
+    def _move(self, speed, axis='x'):
         # TODO использовать self.rect scene.player_zone для ограничения движения
-        saved_rect = self.rect
-        
+        saved_x, saved_y = self.position_x, self.position_y
+
         if axis == 'x':
-            self.rect += SPEED
+            self.position_x += speed
         elif axis == 'y':
-            self.rect += SPEED
+            self.position_y += speed
 
         # Ограничение зоны движения
-        if not self.scene.player_zone.contains(self.rect):
-            self.rect = saved_rect
+        if not (
+            ZONE[0] <= self.position_x <= ZONE[1] and
+            ZONE[2] <= self.position_y <= ZONE[3]
+        ):
+            self.position_x, self.position_y = saved_x, saved_y
 
     def _shoot(self):
         if self.last_shot > SHOT_DELAY:
