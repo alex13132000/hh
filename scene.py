@@ -4,6 +4,7 @@ import background
 import bullet
 import player
 import enemy
+import score
 
 
 WIDTH, HEIGHT = 420, 720
@@ -11,6 +12,8 @@ TICK = 60
 ENEMY_DELAY = 90
 BG_MUSIC = 'assets/musics/music_BG.mp3'
 PLAYER_ZONE = 16, 368, 284, 360
+SCORE_ZONE = 210, 5, 200, 50
+
 
 class Scene:
     def __init__(self):
@@ -25,6 +28,8 @@ class Scene:
         self.last_enemy = 0
         pygame.mixer.music.load(BG_MUSIC)
         pygame.mixer.music.play(loops=-1)
+        self.score_zone = pygame.Rect(*SCORE_ZONE)
+        self.score = score.Score(self)
 
     def shoot(self):
         self._transients.append(bullet.Bullet(self, *self._player.rect.midtop))
@@ -56,6 +61,7 @@ class Scene:
         self._player.draw()
         for b in self._transients:
             b.draw()
+        self.score.draw()
 
     def run(self):
         while True:

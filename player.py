@@ -22,8 +22,15 @@ class Player:
         self.rect = self.image.get_rect()
         self.rect.move_ip(*scene.player_zone.center)
         self.shot_mp3 = pygame.mixer.Sound(SHOT_MP3)
+        self._hp = 3
 
-        #self.rect = self.image.get_rect(topleft=(position_x, position_y))
+    @property
+    def hp(self):
+        return self._hp
+
+    @hp.setter
+    def hp(self, value):
+        self._hp = value
 
     def _move(self, speed, axis='x'):
         if axis == 'x':
