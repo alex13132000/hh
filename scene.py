@@ -16,6 +16,7 @@ class Scene:
     def __init__(self):
         pygame.init()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
+        self.player_zone = pygame.Rect(*PLAYER_ZONE)
         self._background = background.Background(self)
         self._clock = pygame.time.Clock()
         self._hp = []
@@ -24,14 +25,9 @@ class Scene:
         self.last_enemy = 0
         pygame.mixer.music.load(BG_MUSIC)
         pygame.mixer.music.play(loops=-1)
-        self.player_zone = pygame.Rect(*PLAYER_ZONE)
 
     def shoot(self):
-        self._transients.append(
-            bullet.Bullet(
-                self, self._player.position_x, self._player.position_y
-            )
-        )
+        self._transients.append(bullet.Bullet(self, *self._player.rect.midtop))
 
     def get_bullets(self):
         return [o for o in self._transients if isinstance(o, bullet.Bullet)]

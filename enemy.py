@@ -13,8 +13,7 @@ class Enemy:
         self.scene = scene
         self.image = pygame.image.load(IMG)
         self.rect = self.image.get_rect()
-        self.rect.x = random.randrange(10, 401, 10)
-        self.rect.y = SPAWN_Y
+        self.rect.move_ip(random.randrange(10, 401, 10), SPAWN_Y)
 
     def update(self):
         self.rect.y += SPEED

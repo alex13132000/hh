@@ -12,8 +12,7 @@ class Bullet:
         self.scene = scene
         self.image = pygame.image.load(IMG)
         self.rect = self.image.get_rect()
-        self.rect.x = position_x
-        self.rect.y = position_y
+        self.rect.move_ip(position_x, position_y)
 
     def update(self):
         self.rect.y -= SPEED
