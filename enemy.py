@@ -30,5 +30,6 @@ class Enemy:
                 self.scene.remove_transient(b)
                 self.scene.remove_transient(self)
                 self.scene.score.score += 1
+    
 
         
