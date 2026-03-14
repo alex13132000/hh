@@ -5,6 +5,7 @@ import bullet
 import player
 import enemy
 import score
+import hearts
 
 
 WIDTH, HEIGHT = 420, 720
@@ -22,9 +23,9 @@ class Scene:
         self.player_zone = pygame.Rect(*PLAYER_ZONE)
         self._background = background.Background(self)
         self._clock = pygame.time.Clock()
-        self._hp = []
+        self.hearts = hearts.Hearts(self)
         self._transients = []
-        self._player = player.Player(self)
+        self.player = player.Player(self)
         self.last_enemy = 0
         pygame.mixer.music.load(BG_MUSIC)
         pygame.mixer.music.play(loops=-1)
@@ -32,7 +33,7 @@ class Scene:
         self.score = score.Score(self)
 
     def shoot(self):
-        self._transients.append(bullet.Bullet(self, *self._player.rect.midtop))
+        self._transients.append(bullet.Bullet(self, *self.player.rect.midtop))
 
     def get_bullets(self):
         return [o for o in self._transients if isinstance(o, bullet.Bullet)]
@@ -49,7 +50,7 @@ class Scene:
 
     def update(self):
         self._background.update()
-        self._player.update()
+        self.player.update()
         for b in self._transients:
             b.update()
         self._add_enemy()
@@ -58,10 +59,11 @@ class Scene:
 
     def draw(self):
         self._background.draw()
-        self._player.draw()
+        self.player.draw()
         for b in self._transients:
             b.draw()
         self.score.draw()
+        self.hearts.draw()
 
     def run(self):
         while True:
