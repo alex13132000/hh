@@ -36,6 +36,9 @@ class Enemy:
         if self.rect.colliderect(self.scene.player.rect):
             self.scene.remove_transient(self)
             self.scene.hearts.hp -= 1
+            if self.scene.hearts.hp == 0:
+                pygame.quit()
+
 
 
 

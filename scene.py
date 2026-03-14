@@ -1,16 +1,18 @@
+import time
+
 import pygame
 
 import background
 import bullet
-import player
 import enemy
-import score
 import hearts
+import player
+import score
 
 
 WIDTH, HEIGHT = 420, 720
-TICK = 60
-ENEMY_DELAY = 90
+FPS = 60
+ENEMY_DELAY = 1.5
 BG_MUSIC = 'assets/musics/music_BG.mp3'
 PLAYER_ZONE = 16, 360, 388, 344
 SCORE_ZONE = 210, 5, 200, 50
@@ -19,18 +21,23 @@ SCORE_ZONE = 210, 5, 200, 50
 class Scene:
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
-        self.player_zone = pygame.Rect(*PLAYER_ZONE)
-        self._background = background.Background(self)
-        self._clock = pygame.time.Clock()
-        self.hearts = hearts.Hearts(self)
-        self._transients = []
-        self.player = player.Player(self)
-        self.last_enemy = 0
         pygame.mixer.music.load(BG_MUSIC)
         pygame.mixer.music.play(loops=-1)
-        self.score_zone = pygame.Rect(*SCORE_ZONE)
-        self.score = score.Score(self)
+        self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
+
+        self._background = background.Background(self)
+        self._clock = pygame.time.Clock()
+        self._transients = []
+        self.hearts = hearts.Hearts(self)
+        self.player = player.Player(self, PLAYER_ZONE)
+        self.score = score.Score(self, SCORE_ZONE)
+        self.last_enemy_timestamp = time.monotonic()
+
+    def _add_enemy(self):
+        now = time.monotonic()
+        if now - self.last_enemy_timestamp >= ENEMY_DELAY:
+            self._transients.append(enemy.Enemy(self))
+            self.last_enemy_timestamp = now
 
     def shoot(self):
         self._transients.append(bullet.Bullet(self, *self.player.rect.midtop))
@@ -38,15 +45,8 @@ class Scene:
     def get_bullets(self):
         return [o for o in self._transients if isinstance(o, bullet.Bullet)]
 
-    def _add_enemy(self):
-        if self.last_enemy > ENEMY_DELAY:
-            self._transients.append(enemy.Enemy(self))
-            self.last_enemy = 0
-        else:
-            self.last_enemy += 1
-
-    def remove_transient(self, transients):
-        self._transients.remove(transients)
+    def remove_transient(self, transient):
+        self._transients.remove(transient)
 
     def update(self):
         self._background.update()
@@ -54,8 +54,6 @@ class Scene:
         for b in self._transients:
             b.update()
         self._add_enemy()
-
-
 
     def draw(self):
         self._background.draw()
@@ -73,5 +71,4 @@ class Scene:
             self.update()
             self.draw()
             pygame.display.flip()
-            self._clock.tick(TICK)
-
+            self._clock.tick(FPS)
