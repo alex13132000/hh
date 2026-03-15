@@ -4,7 +4,7 @@ import pygame
 IMG = 'assets/images/player_ship/player.png'
 SPAWN = [200, 600]
 SPEED = 5
-SHOT_DELAY = .5
+SHOT_DELAY = 0.5
 SHOT_MP3 = 'assets/musics/shot.mp3'
 
 

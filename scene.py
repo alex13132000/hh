@@ -32,6 +32,7 @@ class Scene:
         self.player = player.Player(self, PLAYER_ZONE)
         self.score = score.Score(self, SCORE_ZONE)
         self.last_enemy_timestamp = time.monotonic()
+        self.last_bullet_timestamp = time.monotonic()
 
     def _add_enemy(self):
         now = time.monotonic()
@@ -40,7 +41,11 @@ class Scene:
             self.last_enemy_timestamp = now
 
     def shoot(self):
-        self._transients.append(bullet.Bullet(self, *self.player.rect.midtop))
+        now = time.monotonic()
+        if now - self.last_bullet_timestamp >= player.SHOT_DELAY:
+            self._transients.append(bullet.Bullet(self, *self.player.rect.midtop))
+            self.last_bullet_timestamp = now
+            self.player.shot_mp3.play()
 
     def get_bullets(self):
         return [o for o in self._transients if isinstance(o, bullet.Bullet)]
