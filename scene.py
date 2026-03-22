@@ -4,6 +4,7 @@ import pygame
 
 import background
 import bullet
+import button
 import enemy
 import hearts
 import player
@@ -33,6 +34,21 @@ class Scene:
         self.score = score.Score(self, SCORE_ZONE)
         self.last_enemy_timestamp = time.monotonic()
         self.last_bullet_timestamp = time.monotonic()
+        self.play_button = button.Button(
+            self,
+            'play',
+            0, 0, 50, 50
+            )
+        self.restart_button = button.Button(
+            self,
+            'restart',
+            0, 50, 50, 50
+            )
+        self.exit_button = button.Button(
+            self,
+            'exit',
+            0, 100, 50, 50
+            )
 
     def _add_enemy(self):
         now = time.monotonic()
@@ -68,11 +84,29 @@ class Scene:
         self.score.draw()
         self.hearts.draw()
 
+    def menu(self):
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                if self.play_button.is_clicked(event):
+                    self.play_button.on_click()
+                if self.restart_button.is_clicked(event):
+                    self.restart_button.on_click()
+                if self.exit_button.is_clicked(event):
+                    self.exit_button.on_click()
+
+            self.screen.fill('blue')
+            pygame.display.flip()
+            self._clock.tick(FPS)
+
+
     def run(self):
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
+            # KEYDOWN           key, mod, unicode, scancode
             self.update()
             self.draw()
             pygame.display.flip()
