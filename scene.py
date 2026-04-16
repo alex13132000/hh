@@ -32,23 +32,35 @@ class Scene:
         self.hearts = hearts.Hearts(self)
         self.player = player.Player(self, PLAYER_ZONE)
         self.score = score.Score(self, SCORE_ZONE)
+        self.state = 'MENU'
         self.last_enemy_timestamp = time.monotonic()
         self.last_bullet_timestamp = time.monotonic()
+        self.reset_game()
         self.play_button = button.Button(
             self,
             'play',
-            0, 0, 50, 50
+            110, 200, 200, 60, self.action_play
             )
         self.restart_button = button.Button(
             self,
             'restart',
-            0, 50, 50, 50
+            110, 300, 200, 60, self.action_restart
             )
         self.exit_button = button.Button(
             self,
             'exit',
-            0, 100, 50, 50
+            110, 400, 200, 60
             )
+
+    def action_play(self):
+        self.state = 'PLAY'
+
+    def action_restart(self):
+        self.reset_game()
+        self.state = 'PLAY'
+
+    def action_exit(self):
+        pygame.quit()
 
     def _add_enemy(self):
         now = time.monotonic()
@@ -69,6 +81,15 @@ class Scene:
     def remove_transient(self, transient):
         self._transients.remove(transient)
 
+    def reset_game(self):
+        self._background = background.Background(self)
+        self._transients = []
+        self.hearts = hearts.Hearts(self)
+        self.player = player.Player(self, PLAYER_ZONE)
+        self.score = score.Score(self, SCORE_ZONE)
+        self.last_enemy_timestamp = time.monotonic()
+        self.last_bullet_timestamp = time.monotonic()
+
     def update(self):
         self._background.update()
         self.player.update()
@@ -84,30 +105,37 @@ class Scene:
         self.score.draw()
         self.hearts.draw()
 
-    def menu(self):
-        while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                if self.play_button.is_clicked(event):
-                    self.play_button.on_click()
-                if self.restart_button.is_clicked(event):
-                    self.restart_button.on_click()
-                if self.exit_button.is_clicked(event):
-                    self.exit_button.on_click()
-
-            self.screen.fill('blue')
-            pygame.display.flip()
-            self._clock.tick(FPS)
-
-
     def run(self):
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-            # KEYDOWN           key, mod, unicode, scancode
-            self.update()
-            self.draw()
+                    self.action_exit()
+
+                if self.state == 'MENU':
+                    if self.play_button.is_clicked(event):
+                        self.play_button.on_click()
+                    if self.exit_button.is_clicked(event):
+                        self.exit_button.on_click()
+
+                elif self.state == 'GAME_OVER':
+                    if self.restart_button.is_clicked(event):
+                        self.restart_button.on_click()
+                    if self.exit_button.is_clicked(event):
+                        self.exit_button.on_click()
+
+            if self.state == 'PLAY':
+                self.update()
+                self.draw()
+
+            elif self.state == 'MENU':
+                self.screen.fill('blue')
+                self.play_button.draw()
+                self.exit_button.draw()
+
+            elif self.state == 'GAME_OVER':
+                self.screen.fill('black')
+                self.restart_button.draw()
+                self.exit_button.draw()
+
             pygame.display.flip()
             self._clock.tick(FPS)
