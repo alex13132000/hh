@@ -1,5 +1,6 @@
 import time
 import pygame
+import sys
 
 import background
 import bullet
@@ -22,27 +23,35 @@ class Scene:
         pygame.init()
         pygame.mixer.music.load(BG_MUSIC)
         pygame.mixer.music.play(loops=-1)
+        self.game_over_font = pygame.font.SysFont('serif', 50)
+        self.over_banner = self.game_over_font.render('GAME OVER', True, 'white')
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         self._clock = pygame.time.Clock()
-        self.resume_button = button.Button(self, 'Resume', 110, 200, 200, 60, self.action_resume)
-        self.restart_button = button.Button(self, 'Restart', 110, 300, 200, 60, self.action_restart)
-        self.exit_button = button.Button(self, 'Exit', 110, 400, 200, 60, self.action_exit)
         self.reset_game()
-        self.state = 'MENU'
+        self.is_playing = False
+        self.menu_buttons = [
+            button.Button(
+                self, 'Resume', 110, 200, 200, 60, self.action_resume),
+            button.Button(
+                self, 'Restart', 110, 300, 200, 60, self.action_restart),
+            button.Button(
+                self, 'Exit', 110, 400, 200, 60, self.action_exit),
+        ]
 
     def action_resume(self):
-        self.state = 'PLAY'
+        self.is_playing = True
 
     def action_restart(self):
         self.reset_game()
-        self.state = 'PLAY'
+        self.is_playing = True
 
     def action_exit(self):
         pygame.quit()
+        sys.exit()
 
     def _add_enemy(self):
         now = time.monotonic()
-        if now - self.last_enemy_timestamp >= ENEMY_DELAY:
+        if now - self.last_enemy_timestamp >= self.enemy_delay:
             self._transients.append(enemy.Enemy(self))
             self.last_enemy_timestamp = now
 
@@ -84,6 +93,12 @@ class Scene:
         self.score.draw()
         self.hearts.draw()
 
+    def handle_menu_events(self, event):
+        for b in self.menu_buttons:
+            if b.is_clicked(event):
+                b.on_click()
+
+
     def run(self):
         while True:
             for event in pygame.event.get():
@@ -91,36 +106,20 @@ class Scene:
                     self.action_exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        if self.state == 'PLAY':
-                            self.state = 'MENU' 
-                        elif self.state == 'MENU':
-                            self.state = 'PLAY'
+                        self.is_playing = not self.is_playing
+                if not self.is_playing:
+                    self.handle_menu_events(event)
 
-                if self.state == 'MENU':
-                    if self.resume_button.is_clicked(event):
-                        self.resume_button.on_click()
-                    if self.restart_button.is_clicked(event):
-                        self.restart_button.on_click()
-                    if self.exit_button.is_clicked(event):
-                        self.exit_button.on_click()
-                elif self.state == 'GAME_OVER':
-                    if self.restart_button.is_clicked(event):
-                        self.restart_button.on_click()
-                    if self.exit_button.is_clicked(event):
-                        self.exit_button.on_click()
-
-            if self.state == 'PLAY':
+            if self.is_playing:
                 self.update()
                 self.draw()
-            elif self.state == 'MENU':
+                if self.hearts.hp <= 0:
+                    self.screen.blit(self.over_banner, (110, 300, 200, 60))
+            else:
                 self.screen.fill('blue')
-                self.resume_button.draw()
-                self.restart_button.draw()
-                self.exit_button.draw()
-            elif self.state == 'GAME_OVER':
-                self.screen.fill('black')
-                self.restart_button.draw()
-                self.exit_button.draw()
+                for b in self.menu_buttons:
+                    b.draw()
+
 
             pygame.display.flip()
             self._clock.tick(FPS)

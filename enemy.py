@@ -14,6 +14,7 @@ class Enemy:
         self.image = pygame.image.load(IMG)
         self.rect = self.image.get_rect()
         self.rect.move_ip(random.randrange(10, 401, 10), SPAWN_Y)
+        self.enemy_delay = 1,5
 
     def update(self):
         self.rect.y += SPEED
@@ -36,11 +37,4 @@ class Enemy:
         if self.rect.colliderect(self.scene.player.rect):
             self.scene.remove_transient(self)
             self.scene.hearts.hp -= 1
-            if self.scene.hearts.hp == 0:
-                pygame.quit()
-
-
-
-
-
 
