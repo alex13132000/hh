@@ -1,0 +1,69 @@
+{
+  "paths": [
+    {
+      "id": "path_1",
+      "type": "cubic_bezier",
+      "points": [
+        { "x": -0.1, "y": 1.1 },
+        { "x": 0.2,  "y": 0.7 },
+        { "x": 0.4,  "y": 0.3 },
+        { "x": 0.5,  "y": 0.1 }
+      ],
+      "duration": 3.0
+    },
+    {
+      "id": "path_2",
+      "type": "cubic_bezier",
+      "points": [
+        { "x": 1.1,  "y": 1.1 },
+        { "x": 0.8,  "y": 0.7 },
+        { "x": 0.6,  "y": 0.3 },
+        { "x": 0.5,  "y": 0.1 }
+      ],
+      "duration": 3.0
+    },
+    {
+      "id": "path_3",
+      "type": "cubic_bezier",
+      "points": [
+        { "x": 0.5,  "y": 1.2 },
+        { "x": 0.5,  "y": 0.8 },
+        { "x": 0.5,  "y": 0.4 },
+        { "x": 0.5,  "y": 0.1 }
+      ],
+      "duration": 2.5
+    }
+  ],
+  "waves": [
+    {
+      "id": "wave_left",
+      "spawn_delay": 0.0,
+      "enemies": [
+        { "type": "basic", "path_id": "path_1", "spawn_time": 0.0 },
+        { "type": "basic", "path_id": "path_1", "spawn_time": 0.4 },
+        { "type": "basic", "path_id": "path_1", "spawn_time": 0.8 },
+        { "type": "basic", "path_id": "path_1", "spawn_time": 1.2 }
+      ]
+    },
+    {
+      "id": "wave_right",
+      "spawn_delay": 1.0,
+      "enemies": [
+        { "type": "basic", "path_id": "path_2", "spawn_time": 1.0 },
+        { "type": "basic", "path_id": "path_2", "spawn_time": 1.4 },
+        { "type": "basic", "path_id": "path_2", "spawn_time": 1.8 },
+        { "type": "basic", "path_id": "path_2", "spawn_time": 2.2 }
+      ]
+    },
+    {
+      "id": "wave_center",
+      "spawn_delay": 2.0,
+      "enemies": [
+        { "type": "basic", "path_id": "path_3", "spawn_time": 2.0 },
+        { "type": "basic", "path_id": "path_3", "spawn_time": 2.3 },
+        { "type": "basic", "path_id": "path_3", "spawn_time": 2.6 },
+        { "type": "basic", "path_id": "path_3", "spawn_time": 2.9 }
+      ]
+    }
+  ]
+}
