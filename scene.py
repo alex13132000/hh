@@ -1,4 +1,3 @@
-import time
 import pygame
 import sys
 
@@ -12,11 +11,10 @@ import score
 
 WIDTH, HEIGHT = 420, 720
 FPS = 60
-ENEMY_DELAY = 1.5
+ENEMY_DELAY = 1500
 BG_MUSIC = 'assets/musics/music_BG.mp3'
 PLAYER_ZONE = 16, 360, 388, 344
 SCORE_ZONE = 210, 5, 200, 50
-
 
 class Scene:
     def __init__(self):
@@ -27,36 +25,37 @@ class Scene:
         self.over_banner = self.game_over_font.render('GAME OVER', True, 'white')
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         self._clock = pygame.time.Clock()
-        self.reset_game()
+        
         self.is_playing = False
+        self.is_game_over = False
+        
         self.menu_buttons = [
-            button.Button(
-                self, 'Resume', 110, 200, 200, 60, self.action_resume),
-            button.Button(
-                self, 'Restart', 110, 300, 200, 60, self.action_restart),
-            button.Button(
-                self, 'Exit', 110, 400, 200, 60, self.action_exit),
+            button.Button(self, 'Resume', 110, 200, 200, 60, self.action_resume),
+            button.Button(self, 'Restart', 110, 300, 200, 60, self.action_restart),
+            button.Button(self, 'Exit', 110, 400, 200, 60, self.action_exit),
         ]
+        
+        self.reset_game()
 
     def action_resume(self):
-        self.is_playing = True
+        if not self.is_game_over:
+            self.is_playing = True
 
     def action_restart(self):
         self.reset_game()
         self.is_playing = True
 
     def action_exit(self):
-        pygame.quit()
-        sys.exit()
+        self.running = False
 
     def _add_enemy(self):
-        now = time.monotonic()
-        if now - self.last_enemy_timestamp >= self.enemy_delay:
-            self._transients.append(enemy.Enemy(self))
+        now = pygame.time.get_ticks()
+        if now - self.last_enemy_timestamp >= ENEMY_DELAY:
+            self._transients.append(enemy.Enemy(self, enemy.ENEMY_DATA)) 
             self.last_enemy_timestamp = now
 
     def shoot(self):
-        now = time.monotonic()
+        now = pygame.time.get_ticks()
         if now - self.last_bullet_timestamp >= player.SHOT_DELAY:
             self._transients.append(bullet.Bullet(self, *self.player.rect.midtop))
             self.last_bullet_timestamp = now
@@ -75,8 +74,11 @@ class Scene:
         self.hearts = hearts.Hearts(self)
         self.player = player.Player(self, PLAYER_ZONE)
         self.score = score.Score(self, SCORE_ZONE)
-        self.last_enemy_timestamp = time.monotonic()
-        self.last_bullet_timestamp = time.monotonic()
+        
+        self.is_game_over = False
+        now = pygame.time.get_ticks()
+        self.last_enemy_timestamp = now
+        self.last_bullet_timestamp = now
 
     def update(self):
         self._background.update()
@@ -84,6 +86,10 @@ class Scene:
         for b in self._transients:
             b.update()
         self._add_enemy()
+        
+        if self.hearts.hp <= 0:
+            self.is_game_over = True
+            self.is_playing = False
 
     def draw(self):
         self._background.draw()
@@ -98,14 +104,15 @@ class Scene:
             if b.is_clicked(event):
                 b.on_click()
 
-
     def run(self):
-        while True:
+        self.running = True
+        
+        while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.action_exit()
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
+                    if event.key == pygame.K_ESCAPE and not self.is_game_over:
                         self.is_playing = not self.is_playing
                 if not self.is_playing:
                     self.handle_menu_events(event)
@@ -113,13 +120,17 @@ class Scene:
             if self.is_playing:
                 self.update()
                 self.draw()
-                if self.hearts.hp <= 0:
-                    self.screen.blit(self.over_banner, (110, 300, 200, 60))
             else:
                 self.screen.fill('blue')
-                for b in self.menu_buttons:
-                    b.draw()
-
-
+                if self.is_game_over:
+                    self.screen.blit(self.over_banner, (90, 150))
+                    for b in self.menu_buttons[1:]: 
+                        b.draw()
+                else:
+                    for b in self.menu_buttons:
+                        b.draw()
             pygame.display.flip()
             self._clock.tick(FPS)
+            
+        pygame.quit()
+        sys.exit()

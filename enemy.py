@@ -6,7 +6,37 @@ import pygame
 IMG = 'assets/images/enemy_ship/enemy_simple.png'
 SPEED = 5
 SPAWN_Y = -25
-
+ENEMY_DATA = {
+      "id": 1,
+      "name": "Spiral Diver I",
+      "tier": 1,
+      "entry_path": {
+        "type": "bezier",
+        "control_points": [
+          { "x": -0.2, "y": 1.1 },
+          { "x": 0.1, "y": 0.8 },
+          { "x": 0.3, "y": 0.5 },
+          { "x": 0.5, "y": 0.2 }
+        ]
+      },
+      "attack_path": {
+        "type": "bezier",
+        "control_points": [
+          { "x": 0.5, "y": 0.2 },
+          { "x": 0.45, "y": 0.4 },
+          { "x": 0.5, "y": 0.7 },
+          { "x": 0.5, "y": 1.1 }
+        ]
+      },
+      "exit_path": {
+        "type": "bezier",
+        "control_points": [
+          { "x": 0.5, "y": 1.1 },
+          { "x": 0.7, "y": 1.2 },
+          { "x": 1.1, "y": 1.0 }
+        ]
+      }
+    }
 
 class Enemy:
     def __init__(self, scene, enemy_data):
@@ -21,8 +51,9 @@ class Enemy:
         self.ttl = 2000
         self.start_time = None
         self.control_points = []
-        self.load_current_path()
+        self.current_path_index = 0
         self.start_time = pygame.time.get_ticks()
+        self.load_current_path()
 
     def load_current_path(self):
         if self.current_path_index >= len(self.path_all):
