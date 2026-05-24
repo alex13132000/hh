@@ -42,24 +42,18 @@ class Enemy:
             u**3 * p0[1] + 3*u**2*t * p1[1] + 3*u*t**2 * p2[1] + t**3 * p3[1]
         )
 
-    def update(self):  # TODO: debug trajectory
+    def update(self):
         now = pygame.time.get_ticks()
         age = now - self.spawn
         index, delta_t = divmod(age, FLY_TIME)
         if index >= PARTS:
-            index = PARTS - 1
-            delta_t = 1
-        print(index, delta_t/FLY_TIME)
+            return
         points = (
             TRAJECTORY[index*PARTS:index*PARTS+POINTS]
         )
-        # print(points, delta_t / FLY_TIME, index)
-        self.rect.move_ip(
-            *self.get_abs_pos(
-                self.get_bezier_point(*points, delta_t / FLY_TIME)
-            )
+        self.rect.center = self.get_abs_pos(
+            self.get_bezier_point(*points, delta_t / FLY_TIME)
         )
-
         self._check_collision_bullets()
         self._check_collision_player()
 

@@ -55,11 +55,10 @@ class Scene:
         sys.exit()
 
     def _add_enemy(self):
-        if not self._transients:
-            now = time.monotonic()  # TODO: get_ticks
-            if now - self.last_enemy_timestamp >= ENEMY_DELAY:
-                self._transients.append(enemy.Enemy(self))
-                self.last_enemy_timestamp = now
+        now = time.monotonic()  # TODO: get_ticks
+        if now - self.last_enemy_timestamp >= ENEMY_DELAY:
+            self._transients.append(enemy.Enemy(self))
+            self.last_enemy_timestamp = now
 
     def shoot(self):
         now = time.monotonic()
