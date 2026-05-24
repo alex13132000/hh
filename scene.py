@@ -1,6 +1,7 @@
-import time
-import pygame
 import sys
+import time
+
+import pygame
 
 import background
 import bullet
@@ -22,9 +23,13 @@ class Scene:
     def __init__(self):
         pygame.init()
         pygame.mixer.music.load(BG_MUSIC)
-        pygame.mixer.music.play(loops=-1)
+        # pygame.mixer.music.play(loops=-1)
         self.game_over_font = pygame.font.SysFont('serif', 50)
-        self.over_banner = self.game_over_font.render('GAME OVER', True, 'white')
+        self.over_banner = self.game_over_font.render(
+            'GAME OVER',
+            True,
+            'white',
+        )
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         self._clock = pygame.time.Clock()
         self.reset_game()
@@ -50,10 +55,11 @@ class Scene:
         sys.exit()
 
     def _add_enemy(self):
-        now = time.monotonic()
-        if now - self.last_enemy_timestamp >= self.enemy_delay:
-            self._transients.append(enemy.Enemy(self))
-            self.last_enemy_timestamp = now
+        if not self._transients:
+            now = time.monotonic()  # TODO: get_ticks
+            if now - self.last_enemy_timestamp >= ENEMY_DELAY:
+                self._transients.append(enemy.Enemy(self))
+                self.last_enemy_timestamp = now
 
     def shoot(self):
         now = time.monotonic()

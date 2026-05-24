@@ -4,8 +4,21 @@ import pygame
 
 
 IMG = 'assets/images/enemy_ship/enemy_simple.png'
-SPEED = 5
-SPAWN_Y = -25
+FLY_TIME = 2000
+TRAJECTORY = [
+    (-.2, .9),
+    (.2, .7),
+    (-.1, .5),
+    (.3, .3),
+    (.6, .5),
+    (.4, .8),
+    (.5, 1.1),
+    (.8, 1.2),
+    (1.1, 1),
+    (1.1, 1),
+]
+PARTS = 3
+POINTS = 4
 
 
 class Enemy:
@@ -13,13 +26,40 @@ class Enemy:
         self.scene = scene
         self.image = pygame.image.load(IMG)
         self.rect = self.image.get_rect()
-        self.rect.move_ip(random.randrange(10, 401, 10), SPAWN_Y)
-        self.enemy_delay = 1,5
+        self.spawn = pygame.time.get_ticks()
 
-    def update(self):
-        self.rect.y += SPEED
-        if self.rect.y > self.scene.screen.get_height():
-            self.scene.remove_transient(self)
+    def get_abs_pos(self, rel_pos):
+        return (
+            rel_pos[0] * self.scene.screen.get_width(),
+            rel_pos[1] * self.scene.screen.get_height(),
+        )
+
+    @staticmethod
+    def get_bezier_point(p0, p1, p2, p3, t):
+        u = 1 - t
+        return (
+            u**3 * p0[0] + 3*u**2*t * p1[0] + 3*u*t**2 * p2[0] + t**3 * p3[0],
+            u**3 * p0[1] + 3*u**2*t * p1[1] + 3*u*t**2 * p2[1] + t**3 * p3[1]
+        )
+
+    def update(self):  # TODO: debug trajectory
+        now = pygame.time.get_ticks()
+        age = now - self.spawn
+        index, delta_t = divmod(age, FLY_TIME)
+        if index >= PARTS:
+            index = PARTS - 1
+            delta_t = 1
+        print(index, delta_t/FLY_TIME)
+        points = (
+            TRAJECTORY[index*PARTS:index*PARTS+POINTS]
+        )
+        # print(points, delta_t / FLY_TIME, index)
+        self.rect.move_ip(
+            *self.get_abs_pos(
+                self.get_bezier_point(*points, delta_t / FLY_TIME)
+            )
+        )
+
         self._check_collision_bullets()
         self._check_collision_player()
 
