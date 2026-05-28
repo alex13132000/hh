@@ -47,6 +47,7 @@ class Enemy:
         age = now - self.spawn
         index, delta_t = divmod(age, FLY_TIME)
         if index >= PARTS:
+            self.scene.remove_transient(self)
             return
         points = (
             TRAJECTORY[index*PARTS:index*PARTS+POINTS]

@@ -44,7 +44,8 @@ class Scene:
         ]
 
     def action_resume(self):
-        self.is_playing = True
+        if hasattr(self, 'hearts') and self.hearts.hp > 0:
+            self.is_playing = True
 
     def action_restart(self):
         self.reset_game()
@@ -86,9 +87,9 @@ class Scene:
     def update(self):
         self._background.update()
         self.player.update()
+        self._add_enemy()
         for b in self._transients:
             b.update()
-        self._add_enemy()
 
     def draw(self):
         self._background.draw()
@@ -116,7 +117,8 @@ class Scene:
                     self.handle_menu_events(event)
 
             if self.is_playing:
-                self.update()
+                if self.hearts.hp > 0:
+                    self.update()
                 self.draw()
                 if self.hearts.hp <= 0:
                     self.screen.blit(self.over_banner, (110, 300, 200, 60))
