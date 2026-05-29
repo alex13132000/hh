@@ -24,6 +24,11 @@ class Scene:
         pygame.init()
         pygame.mixer.music.load(BG_MUSIC)
         # pygame.mixer.music.play(loops=-1)
+        self.enemy_classes = [
+            enemy.SCurveRaiderI,
+            enemy.SCurveTankI,
+        ]
+        self.current_enemy_class_index = 0
         self.game_over_font = pygame.font.SysFont('serif', 50)
         self.over_banner = self.game_over_font.render(
             'GAME OVER',
@@ -58,8 +63,15 @@ class Scene:
     def _add_enemy(self):
         now = time.monotonic()  # TODO: get_ticks
         if now - self.last_enemy_timestamp >= ENEMY_DELAY:
-            self._transients.append(enemy.SCurveRaiderI(self))
+            self._transients.append(
+                self.enemy_classes[
+                    self.current_enemy_class_index
+                ](self)
+            )
             self.last_enemy_timestamp = now
+            self.current_enemy_class_index += 1
+            if self.current_enemy_class_index == len(self.enemy_classes):
+                self.current_enemy_class_index = 0
 
     def shoot(self):
         now = time.monotonic()

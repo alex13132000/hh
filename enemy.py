@@ -39,12 +39,14 @@ class Enemy:
     def update(self):
         now = pygame.time.get_ticks()
         age = now - self.spawn
-        index, delta_t = divmod(age, self.fly_time)
-        if index >= PARTS:
+        part, delta_t = divmod(age, self.fly_time)
+        if part >= PARTS:
             self.scene.remove_transient(self)
             return
         points = (
-            self.trajectory[index*PARTS:index*PARTS+POINTS]
+            self.trajectory[
+                part*(POINTS-1):part*(POINTS-1)+POINTS
+            ]
         )
         self.rect.center = self.get_abs_pos(
             self.get_bezier_point(*points, delta_t / self.fly_time)
@@ -83,5 +85,24 @@ class SCurveRaiderI(Enemy):
             (.8, 1.2),
             (1.1, 1),
             (1.1, 1),
+        )
+        super().__init__(scene)
+
+
+class SCurveTankI(Enemy):
+    def __init__(self, scene):
+        self.image_filename = 'assets/images/enemy_ship/enemy_big.png'
+        self.fly_time = 4000
+        self.trajectory = (
+            (1.1, 1.1),
+            (.8, .9),
+            (.6, .6),
+            (.4, .3),
+            (.45, .5),
+            (.3, .8),
+            (.2, 1.1),
+            (0, 1.2),
+            (-.2, 1),
+            (-.2, 1),
         )
         super().__init__(scene)
