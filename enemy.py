@@ -1,4 +1,4 @@
-import random
+import math
 
 import pygame
 
@@ -21,6 +21,8 @@ class Enemy:
         self.scene = scene
         self.rect = self.image.get_rect()
         self.spawn = pygame.time.get_ticks()
+        self.rotated_image = None
+
 
     def get_abs_pos(self, rel_pos):
         return (
@@ -32,9 +34,30 @@ class Enemy:
     def get_bezier_point(p0, p1, p2, p3, t):
         u = 1 - t
         return (
-            u**3 * p0[0] + 3*u**2*t * p1[0] + 3*u*t**2 * p2[0] + t**3 * p3[0],
-            u**3 * p0[1] + 3*u**2*t * p1[1] + 3*u*t**2 * p2[1] + t**3 * p3[1]
+            u**3 * p0[0] +
+            3*u**2*t * p1[0] +
+            3*u*t**2 * p2[0] +
+            t**3 * p3[0],
+            u**3 * p0[1] +
+            3*u**2*t * p1[1] +
+            3*u*t**2 * p2[1] +
+            t**3 * p3[1]
         )
+
+    @staticmethod
+    def get_orientation_angle(p0, p1, p2, p3, t):
+        u = 1 - t
+        dx = (
+            3*u*u*(p1[0] - p0[0]) +
+            6*u*t*(p2[0] - p1[0]) +
+            3*t*t*(p3[0] - p2[0])
+        )
+        dy = (
+            3*u*u*(p1[1] - p0[1]) +
+            6*u*t*(p2[1] - p1[1]) +
+            3*t*t*(p3[1] - p2[1])
+        )
+        return -math.degrees(math.atan2(dy, dx))
 
     def update(self):
         now = pygame.time.get_ticks()
@@ -51,11 +74,16 @@ class Enemy:
         self.rect.center = self.get_abs_pos(
             self.get_bezier_point(*points, delta_t / self.fly_time)
         )
+        self.rotated_image = pygame.transform.rotate(
+            self.image, self.get_orientation_angle(
+                *points, delta_t / self.fly_time
+            )
+        )
         self._check_collision_bullets()
         self._check_collision_player()
 
     def draw(self):
-        self.scene.screen.blit(self.image, self.rect)
+        self.scene.screen.blit(self.rotated_image, self.rect)
 
     def _check_collision_bullets(self):
         for b in self.scene.get_bullets():
