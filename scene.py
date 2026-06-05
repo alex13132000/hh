@@ -27,6 +27,7 @@ class Scene:
         self.enemy_classes = [
             enemy.SCurveRaiderI,
             enemy.SCurveTankI,
+            enemy.SCurveSpeedI,
         ]
         self.current_enemy_class_index = 0
         self.game_over_font = pygame.font.SysFont('serif', 50)

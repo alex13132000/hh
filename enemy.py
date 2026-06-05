@@ -103,16 +103,16 @@ class SCurveRaiderI(Enemy):
         self.image_filename = 'assets/images/enemy_ship/enemy_simple.png'
         self.fly_time = 2000
         self.trajectory = (
-            (-.2, .9),
-            (.2, .7),
-            (-.1, .5),
-            (.3, .3),
-            (.6, .5),
-            (.4, .8),
-            (.5, 1.1),
-            (.8, 1.2),
-            (1.1, 1),
-            (1.1, 1),
+            (.2, -.1),
+            (.1, .2),
+            (.2, .4),
+            (.3, .5), 
+            (.4, .6), 
+            (.5, .7),
+            (.6, .8), 
+            (.7, .9), 
+            (.6, 1.0), 
+            (.7, 1.2),
         )
         super().__init__(scene)
 
@@ -122,15 +122,33 @@ class SCurveTankI(Enemy):
         self.image_filename = 'assets/images/enemy_ship/enemy_big.png'
         self.fly_time = 4000
         self.trajectory = (
-            (1.1, 1.1),
-            (.8, .9),
-            (.6, .6),
-            (.4, .3),
-            (.45, .5),
-            (.3, .8),
-            (.2, 1.1),
-            (0, 1.2),
-            (-.2, 1),
-            (-.2, 1),
+            (.8, -.1),
+            (.9, .2), 
+            (.8, .4),
+            (.7, .5), 
+            (.6, .6), 
+            (.5, .7),
+            (.4, .8), 
+            (.3, .9), 
+            (.4, 1.0), 
+            (.3, 1.2),
+        )
+        super().__init__(scene)
+
+class SCurveSpeedI(Enemy):
+    def __init__(self, scene):
+        self.image_filename = 'assets/images/enemy_ship/enemy_speed.png'
+        self.fly_time = 1500
+        self.trajectory = (
+            (.1, -.1), 
+            (.0, .2), 
+            (.3, .4),
+            (.5, .6), 
+            (.7, .5), 
+            (.9, .4),
+            (1, .3), 
+            (.9, .8), 
+            (.7, 1), 
+            (.5, 1.2),
         )
         super().__init__(scene)
