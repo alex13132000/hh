@@ -1,3 +1,4 @@
+import random
 import sys
 import time
 
@@ -6,10 +7,13 @@ import pygame
 import background
 import bullet
 import button
-import enemy
+from enemy import SCurveRaiderI as scr1
+from enemy import SCurveTankI as sct1
+from enemy import SCurveSpeedI as scs1
 import hearts
 import player
 import score
+
 
 WIDTH, HEIGHT = 420, 720
 FPS = 60
@@ -24,12 +28,11 @@ class Scene:
         pygame.init()
         pygame.mixer.music.load(BG_MUSIC)
         # pygame.mixer.music.play(loops=-1)
-        self.enemy_classes = [
-            enemy.SCurveRaiderI,
-            enemy.SCurveTankI,
-            enemy.SCurveSpeedI,
-        ]
-        self.current_enemy_class_index = 0
+        self.spawn_patterns = (
+            (scr1, scr1, scr1, scr1, sct1, scs1, sct1, scs1),
+            (scs1, scs1, scs1, sct1, sct1, scr1, scr1, scs1),
+            (sct1, sct1, sct1, scr1, scr1, scs1, scs1, scr1),
+        )
         self.game_over_font = pygame.font.SysFont('serif', 50)
         self.over_banner = self.game_over_font.render(
             'GAME OVER',
@@ -64,15 +67,14 @@ class Scene:
     def _add_enemy(self):
         now = time.monotonic()  # TODO: get_ticks
         if now - self.last_enemy_timestamp >= ENEMY_DELAY:
-            self._transients.append(
-                self.enemy_classes[
-                    self.current_enemy_class_index
-                ](self)
-            )
+            while ...:
+                try:
+                    next_enemy = next(enemy_it)(self)
+                    break
+                except (StopIteration, NameError):
+                    enemy_it = iter(random.choice(self.spawn_patterns))
+            self._transients.append(next_enemy)
             self.last_enemy_timestamp = now
-            self.current_enemy_class_index += 1
-            if self.current_enemy_class_index == len(self.enemy_classes):
-                self.current_enemy_class_index = 0
 
     def shoot(self):
         now = time.monotonic()
