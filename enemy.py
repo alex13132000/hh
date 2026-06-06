@@ -2,6 +2,8 @@ import math
 
 import pygame
 
+import blast
+
 
 PARTS = 3
 POINTS = 4
@@ -64,7 +66,7 @@ class Enemy:
         age = now - self.spawn
         part, delta_t = divmod(age, self.fly_time)
         if part >= PARTS:
-            self.scene.remove_transient(self)
+            self.scene.transients.remove(self)
             return
         points = (
             self.trajectory[
@@ -88,14 +90,17 @@ class Enemy:
     def _check_collision_bullets(self):
         for b in self.scene.get_bullets():
             if self.rect.colliderect(b.rect):
-                self.scene.remove_transient(b)
-                self.scene.remove_transient(self)
+                self.scene.transients.remove(b)
+                self.scene.transients.remove(self)
                 self.scene.score.score += 1
+                blast.Blast(self.scene, self.rect)
+
 
     def _check_collision_player(self):
         if self.rect.colliderect(self.scene.player.rect):
-            self.scene.remove_transient(self)
+            self.scene.transients.remove(self)
             self.scene.hearts.hp -= 1
+            blast.Blast(self.scene, self.rect)
 
 
 class SCurveRaiderI(Enemy):
@@ -106,12 +111,12 @@ class SCurveRaiderI(Enemy):
             (.2, -.1),
             (.1, .2),
             (.2, .4),
-            (.3, .5), 
-            (.4, .6), 
+            (.3, .5),
+            (.4, .6),
             (.5, .7),
-            (.6, .8), 
-            (.7, .9), 
-            (.6, 1.0), 
+            (.6, .8),
+            (.7, .9),
+            (.6, 1.0),
             (.7, 1.2),
         )
         super().__init__(scene)
@@ -123,14 +128,14 @@ class SCurveTankI(Enemy):
         self.fly_time = 4000
         self.trajectory = (
             (.8, -.1),
-            (.9, .2), 
+            (.9, .2),
             (.8, .4),
-            (.7, .5), 
-            (.6, .6), 
+            (.7, .5),
+            (.6, .6),
             (.5, .7),
-            (.4, .8), 
-            (.3, .9), 
-            (.4, 1.0), 
+            (.4, .8),
+            (.3, .9),
+            (.4, 1.0),
             (.3, 1.2),
         )
         super().__init__(scene)
@@ -140,15 +145,15 @@ class SCurveSpeedI(Enemy):
         self.image_filename = 'assets/images/enemy_ship/enemy_speed.png'
         self.fly_time = 1500
         self.trajectory = (
-            (.1, -.1), 
-            (.0, .2), 
+            (.1, -.1),
+            (.0, .2),
             (.3, .4),
-            (.5, .6), 
-            (.7, .5), 
+            (.5, .6),
+            (.7, .5),
             (.9, .4),
-            (1, .3), 
-            (.9, .8), 
-            (.7, 1), 
+            (1, .3),
+            (.9, .8),
+            (.7, 1),
             (.5, 1.2),
         )
         super().__init__(scene)

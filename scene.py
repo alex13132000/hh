@@ -73,26 +73,22 @@ class Scene:
                     break
                 except (StopIteration, NameError):
                     enemy_it = iter(random.choice(self.spawn_patterns))
-            self._transients.append(next_enemy)
+            self.transients.append(next_enemy)
             self.last_enemy_timestamp = now
 
     def shoot(self):
         now = time.monotonic()
         if now - self.last_bullet_timestamp >= player.SHOT_DELAY:
-            self._transients.append(bullet.Bullet(self, *self.player.rect.midtop))
+            self.transients.append(bullet.Bullet(self, *self.player.rect.midtop))
             self.last_bullet_timestamp = now
         self.player.shot_mp3.play()
 
     def get_bullets(self):
-        return [o for o in self._transients if isinstance(o, bullet.Bullet)]
-
-    def remove_transient(self, transient):
-        if transient in self._transients:
-            self._transients.remove(transient)
+        return [o for o in self.transients if isinstance(o, bullet.Bullet)]
 
     def reset_game(self):
         self._background = background.Background(self)
-        self._transients = []
+        self.transients = []
         self.hearts = hearts.Hearts(self)
         self.player = player.Player(self, PLAYER_ZONE)
         self.score = score.Score(self, SCORE_ZONE)
@@ -103,13 +99,13 @@ class Scene:
         self._background.update()
         self.player.update()
         self._add_enemy()
-        for b in self._transients:
+        for b in self.transients:
             b.update()
 
     def draw(self):
         self._background.draw()
         self.player.draw()
-        for b in self._transients:
+        for b in self.transients:
             b.draw()
         self.score.draw()
         self.hearts.draw()

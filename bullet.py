@@ -17,7 +17,7 @@ class Bullet:
     def update(self):
         self.rect.y -= SPEED
         if self.rect.y < BOUNDARY:
-            self.scene.remove_transient(self)
+            self.scene.transients.remove(self)
 
     def draw(self):
         self.scene.screen.blit(source=self.image, dest=self.rect)
