@@ -18,7 +18,7 @@ import score
 
 WIDTH, HEIGHT = 420, 720
 FPS = 60
-BONUS_DELAY = 5
+BONUS_DELAY = 1
 ENEMY_DELAY = 1.5
 BG_MUSIC = 'assets/musics/music_BG.mp3'
 PLAYER_ZONE = 16, 360, 388, 344
@@ -82,11 +82,8 @@ class Scene:
         now = time.monotonic()
         if now - self.last_bonus_timestamp >= BONUS_DELAY:
             if random.random() < 0.5:
-                try:
-                    self.transients.append(bonus.BonusBomb(self))
-                except Exception as e:
-                    print(f"Error occurred while adding bonus bomb: {e}")
-            self.last_bonus_timestamp = now
+                bonus.BonusBomb(self)
+                self.last_bonus_timestamp = now
 
     def shoot(self):
         now = time.monotonic()

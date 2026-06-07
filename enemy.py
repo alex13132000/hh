@@ -9,22 +9,14 @@ PARTS = 3
 POINTS = 4
 
 
-class Enemy:
-    def __init__(self, scene):
-        if not hasattr(self, 'trajectory'):
-            self.trajectory = ((0, 0),) * 10
-        if not hasattr(self, 'fly_time'):
-            self.fly_time = 1
-        if hasattr(self, 'image_filename'):
-            self.image = pygame.image.load(self.image_filename)
-        else:
-            self.image_filename = None
-            self.image = pygame.Surface((0, 0))
+class BaseEnemy:
+    def __init__(self, scene, image_filename, trajectory, fly_time):
         self.scene = scene
+        self.image = pygame.image.load(image_filename)
+        self.trajectory = trajectory
+        self.fly_time = fly_time
         self.rect = self.image.get_rect()
         self.spawn = pygame.time.get_ticks()
-        self.rotated_image = None
-
 
     def get_abs_pos(self, rel_pos):
         return (
@@ -103,57 +95,62 @@ class Enemy:
             blast.Blast(self.scene, self.rect)
 
 
-class SCurveRaiderI(Enemy):
+class SCurveRaiderI(BaseEnemy):
     def __init__(self, scene):
-        self.image_filename = 'assets/images/enemy_ship/enemy_simple.png'
-        self.fly_time = 2000
-        self.trajectory = (
-            (.2, -.1),
-            (.1, .2),
-            (.2, .4),
-            (.3, .5),
-            (.4, .6),
-            (.5, .7),
-            (.6, .8),
-            (.7, .9),
-            (.6, 1.0),
-            (.7, 1.2),
+        super().__init__(
+            scene=scene,
+            image_filename='assets/images/enemy_ship/enemy_simple.png',
+            trajectory=(
+                (.2, -.1),
+                (.1, .2),
+                (.2, .4),
+                (.3, .5),
+                (.4, .6),
+                (.5, .7),
+                (.6, .8),
+                (.7, .9),
+                (.6, 1.0),
+                (.7, 1.2),
+            ),
+            fly_time=2000,
         )
-        super().__init__(scene)
 
-
-class SCurveTankI(Enemy):
+class SCurveTankI(BaseEnemy):
     def __init__(self, scene):
-        self.image_filename = 'assets/images/enemy_ship/enemy_big.png'
-        self.fly_time = 4000
-        self.trajectory = (
-            (.8, -.1),
-            (.9, .2),
-            (.8, .4),
-            (.7, .5),
-            (.6, .6),
-            (.5, .7),
-            (.4, .8),
-            (.3, .9),
-            (.4, 1.0),
-            (.3, 1.2),
+        super().__init__(
+            scene=scene,
+            image_filename='assets/images/enemy_ship/enemy_big.png',
+            trajectory=(
+                (.8, -.1),
+                (.9, .2),
+                (.8, .4),
+                (.7, .5),
+                (.6, .6),
+                (.5, .7),
+                (.4, .8),
+                (.3, .9),
+                (.4, 1.0),
+                (.3, 1.2),
+            ),
+            fly_time=4000,
         )
-        super().__init__(scene)
 
-class SCurveSpeedI(Enemy):
+class SCurveSpeedI(BaseEnemy):
     def __init__(self, scene):
-        self.image_filename = 'assets/images/enemy_ship/enemy_speed.png'
-        self.fly_time = 1500
-        self.trajectory = (
-            (.1, -.1),
-            (.0, .2),
-            (.3, .4),
-            (.5, .6),
-            (.7, .5),
-            (.9, .4),
-            (1, .3),
-            (.9, .8),
-            (.7, 1),
-            (.5, 1.2),
+        super().__init__(
+            scene=scene,
+            image_filename='assets/images/enemy_ship/enemy_speed.png',
+            trajectory=(
+                (.1, -.1),
+                (.0, .2),
+                (.3, .4),
+                (.5, .6),
+                (.7, .5),
+                (.9, .4),
+                (1, .3),
+                (.9, .8),
+                (.7, 1),
+                (.5, 1.2),
+            ),
+            fly_time=1500,
         )
-        super().__init__(scene)

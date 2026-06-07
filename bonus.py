@@ -3,34 +3,31 @@ import random
 import pygame
 
 SPEED = 5
-BOUNDARY = 800
-SPAWN = 0, 400
+BOUNDARY = 50
+MARGIN = 20
 
-class Bonus:
-    def __init__(self, scene):
-        if hasattr(self, 'image_filename'):
-            self.image = pygame.image.load(self.image_filename)
-        else:
-            self.image_filename = None
-            self.image = pygame.Surface((0, 0))
-
+class BaseBonus:
+    def __init__(self, scene, image_filename):
         self.scene = scene
+        self.image = pygame.image.load(image_filename)
         self.rect = self.image.get_rect()
-        self.rect.x = random.randint(0, 400 - self.rect.width)
-        self.rect.y = -50
-
+        self.rect.center = random.randint(
+            MARGIN, scene.get_width() - MARGIN
+        ), -BOUNDARY
+        self.scene.transients.append(self)
 
     def update(self):
         self.rect.y += SPEED
-        if self.rect.y > BOUNDARY:
-            if self in self.scene.transients:
-                self.scene.transients.remove(self)
+        if self.rect.y > BOUNDARY + self.scene.get_heght():
+            self.scene.transients.remove(self)
 
     def draw(self):
-        self.scene.screen.blit(source=self.image, dest=self.rect)    
-    
-class BonusBomb(Bonus):
+        self.scene.screen.blit(source=self.image, dest=self.rect)
+
+
+class BonusBomb(BaseBonus):
     def __init__(self, scene):
-        self.image_filename = 'assets/images/bonus_ship/bonus_bomb.png'
-        
-        super().__init__(scene)
+        super().__init__(
+            scene=scene,
+            image_filename='assets/images/bonus_ship/bonus_bomb.png',
+        )
