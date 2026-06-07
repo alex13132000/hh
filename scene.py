@@ -5,6 +5,7 @@ import time
 import pygame
 
 import background
+import bonus
 import bullet
 import button
 from enemy import SCurveRaiderI as scr1
@@ -17,6 +18,7 @@ import score
 
 WIDTH, HEIGHT = 420, 720
 FPS = 60
+BONUS_DELAY = 5
 ENEMY_DELAY = 1.5
 BG_MUSIC = 'assets/musics/music_BG.mp3'
 PLAYER_ZONE = 16, 360, 388, 344
@@ -76,6 +78,16 @@ class Scene:
             self.transients.append(next_enemy)
             self.last_enemy_timestamp = now
 
+    def add_bonus(self):
+        now = time.monotonic()
+        if now - self.last_bonus_timestamp >= BONUS_DELAY:
+            if random.random() < 0.5:
+                try:
+                    self.transients.append(bonus.BonusBomb(self))
+                except Exception as e:
+                    print(f"Error occurred while adding bonus bomb: {e}")
+            self.last_bonus_timestamp = now
+
     def shoot(self):
         now = time.monotonic()
         if now - self.last_bullet_timestamp >= player.SHOT_DELAY:
@@ -94,11 +106,13 @@ class Scene:
         self.score = score.Score(self, SCORE_ZONE)
         self.last_enemy_timestamp = time.monotonic()
         self.last_bullet_timestamp = time.monotonic()
+        self.last_bonus_timestamp = time.monotonic()
 
     def update(self):
         self._background.update()
         self.player.update()
         self._add_enemy()
+        self.add_bonus()
         for b in self.transients:
             b.update()
 
