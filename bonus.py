@@ -12,13 +12,13 @@ class BaseBonus:
         self.image = pygame.image.load(image_filename)
         self.rect = self.image.get_rect()
         self.rect.center = random.randint(
-            MARGIN, scene.get_width() - MARGIN
+            MARGIN, scene.screen.get_width() - MARGIN
         ), -BOUNDARY
         self.scene.transients.append(self)
 
     def update(self):
         self.rect.y += SPEED
-        if self.rect.y > BOUNDARY + self.scene.get_heght():
+        if self.rect.y > BOUNDARY + self.scene.screen.get_height():
             self.scene.transients.remove(self)
 
     def draw(self):
@@ -31,3 +31,7 @@ class BonusBomb(BaseBonus):
             scene=scene,
             image_filename='assets/images/bonus_ship/bonus_bomb.png',
         )
+
+    def _check_collision_player(self):
+        if self.rect.colliderect(self.scene.player.rect):
+            self.scene.transients.remove(self)

@@ -1,5 +1,7 @@
 import pygame
 
+import bonus
+
 
 IMG = 'assets/images/player_ship/player.png'
 SPAWN = [200, 600]
@@ -25,7 +27,6 @@ class Player:
             self.rect.y += speed
 
         self.rect.clamp_ip(self.zone)
-
 
     def _shoot(self):
         if self.last_shot > SHOT_DELAY:
