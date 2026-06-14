@@ -87,7 +87,6 @@ class BaseEnemy:
                 self.scene.score.score += 1
                 blast.Blast(self.scene, self.rect)
 
-
     def _check_collision_player(self):
         if self.rect.colliderect(self.scene.player.rect):
             self.scene.transients.remove(self)
@@ -115,6 +114,7 @@ class SCurveRaiderI(BaseEnemy):
             fly_time=2000,
         )
 
+
 class SCurveTankI(BaseEnemy):
     def __init__(self, scene):
         super().__init__(
@@ -134,6 +134,7 @@ class SCurveTankI(BaseEnemy):
             ),
             fly_time=4000,
         )
+
 
 class SCurveSpeedI(BaseEnemy):
     def __init__(self, scene):

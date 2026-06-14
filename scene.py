@@ -85,13 +85,6 @@ class Scene:
                 bonus.BonusBomb(self)
                 self.last_bonus_timestamp = now
 
-    def shoot(self):
-        now = time.monotonic()
-        if now - self.last_bullet_timestamp >= player.SHOT_DELAY:
-            self.transients.append(bullet.Bullet(self, *self.player.rect.midtop))
-            self.last_bullet_timestamp = now
-        self.player.shot_mp3.play()
-
     def get_bullets(self):
         return [o for o in self.transients if isinstance(o, bullet.Bullet)]
 

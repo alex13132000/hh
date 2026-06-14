@@ -53,3 +53,13 @@ class BonusBomb(BaseBonus):
             ]
             return True
 
+class BonusBullet(BaseBonus):
+    def __init__(self, scene):
+        super().__init__(
+            scene=scene,
+            image_filename='assets/images/bonus_ship/bonus_bullet.png',
+        )
+
+    def _is_player_collision(self):
+        if super()._is_player_collision():
+            ...

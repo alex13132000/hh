@@ -5,14 +5,14 @@ IMG = 'assets/images/player_ship/bullet_P.png'
 SPEED = 10
 BOUNDARY = -20
 
-# Rect(object) -> Rect
 
 class Bullet:
-    def __init__(self, scene, position_x, position_y):
+    def __init__(self, scene, pos):
         self.scene = scene
         self.image = pygame.image.load(IMG)
         self.rect = self.image.get_rect()
-        self.rect.move_ip(position_x, position_y)
+        self.rect.center = pos
+        self.scene.transients.append(self)
 
     def update(self):
         self.rect.y -= SPEED
@@ -21,3 +21,6 @@ class Bullet:
 
     def draw(self):
         self.scene.screen.blit(source=self.image, dest=self.rect)
+
+
+

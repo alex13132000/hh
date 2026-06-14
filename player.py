@@ -1,41 +1,44 @@
 import pygame
 
 import bonus
+import bullet
 
 
 IMG = 'assets/images/player_ship/player.png'
 SPAWN = [200, 600]
 SPEED = 5
-SHOT_DELAY = 0.5
+SHOT_DELAY = 500
+BONUS_DURATION = 10000
 SHOT_MP3 = 'assets/musics/shot.mp3'
 
 
 class Player:
     def __init__(self, scene, zone):
-        self.last_shot = SHOT_DELAY
+        self.last_shot = 0
         self.scene = scene
         self.image = pygame.image.load(IMG)
         self.rect = self.image.get_rect()
         self.zone = pygame.Rect(*zone)
         self.rect.move_ip(*self.zone.center)
         self.shot_mp3 = pygame.mixer.Sound(SHOT_MP3)
+        self.bonus_deactivate = 0
 
     def _move(self, speed, axis='x'):
         if axis == 'x':
             self.rect.x += speed
         elif axis == 'y':
             self.rect.y += speed
-
         self.rect.clamp_ip(self.zone)
 
     def _shoot(self):
-        if self.last_shot > SHOT_DELAY:
-            self.scene.shoot()
-            self.last_shot = 0
+        now = pygame.time.get_ticks()
+        if now - self.last_shot > SHOT_DELAY:
+            self.last_shot = now
             self.shot_mp3.play()
+            bullet.Bullet(self.scene, self.rect.midtop)
+
 
     def update(self):
-        self.last_shot += 1
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a]:
             self._move(-SPEED, 'x')
