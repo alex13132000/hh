@@ -3,6 +3,7 @@ import random
 import pygame
 
 from enemy import BaseEnemy
+import blast
 
 SPEED = 5
 BOUNDARY = 50
@@ -50,7 +51,7 @@ class BonusBomb(BaseBonus):
         if super()._is_player_collision():
             self.scene.transients = [
                 i for i in self.scene.transients if not isinstance(i, BaseEnemy)
-            ]
+            ]    
             return True
 
 class BonusBullet(BaseBonus):
@@ -62,4 +63,17 @@ class BonusBullet(BaseBonus):
 
     def _is_player_collision(self):
         if super()._is_player_collision():
-            ...
+            if self.scene.player.bonus_active < 2:
+                self.scene.player.bonus_active += 1
+
+class BonusHealth(BaseBonus):
+    def __init__(self, scene):
+        super().__init__(
+            scene=scene,
+            image_filename='assets/images/bonus_ship/bonus_heart.png',
+        )
+    
+    def _is_player_collision(self):
+        if super()._is_player_collision():
+            if self.scene.hearts.hp < 3:
+                self.scene.hearts.hp += 1

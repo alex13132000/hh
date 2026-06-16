@@ -82,7 +82,7 @@ class Scene:
         now = time.monotonic()
         if now - self.last_bonus_timestamp >= BONUS_DELAY:
             if random.random() < 0.5:
-                bonus.BonusBomb(self)
+                random.choice([bonus.BonusBomb, bonus.BonusBullet, bonus.BonusHealth])(self)
                 self.last_bonus_timestamp = now
 
     def get_bullets(self):

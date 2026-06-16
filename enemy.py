@@ -91,6 +91,7 @@ class BaseEnemy:
         if self.rect.colliderect(self.scene.player.rect):
             self.scene.transients.remove(self)
             self.scene.hearts.hp -= 1
+            self.scene.player.bonus_active = 0
             blast.Blast(self.scene, self.rect)
 
 
