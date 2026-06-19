@@ -21,7 +21,7 @@ class Player:
         self.zone = pygame.Rect(*zone)
         self.rect.move_ip(*self.zone.center)
         self.shot_mp3 = pygame.mixer.Sound(SHOT_MP3)
-        self.bonus_active = 0
+        self.bullet_bonus = 0
 
     def _move(self, speed, axis='x'):
         if axis == 'x':
@@ -35,13 +35,9 @@ class Player:
         if now - self.last_shot > SHOT_DELAY:
             self.last_shot = now
             self.shot_mp3.play()
-            if self.bonus_active == 0:
+            if self.bullet_bonus % 2 == 0:
                 bullet.Bullet(self.scene, self.rect.midtop)
-            if self.bonus_active == 1:
-                bullet.Bullet(self.scene, self.rect.midright)
-                bullet.Bullet(self.scene, self.rect.midleft)
-            if self.bonus_active == 2:
-                bullet.Bullet(self.scene, self.rect.midtop)
+            if self.bullet_bonus > 0:
                 bullet.Bullet(self.scene, self.rect.midright)
                 bullet.Bullet(self.scene, self.rect.midleft)
 
