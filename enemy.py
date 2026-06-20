@@ -83,9 +83,13 @@ class BaseEnemy:
         for b in self.scene.get_bullets():
             if self.rect.colliderect(b.rect):
                 self.scene.transients.remove(b)
-                self.scene.transients.remove(self)
+                try:
+                    self.scene.transients.remove(self)
+                except ValueError:
+                    pass
                 self.scene.score.score += 1
                 blast.Blast(self.scene, self.rect)
+
 
     def _check_collision_player(self):
         if self.rect.colliderect(self.scene.player.rect):

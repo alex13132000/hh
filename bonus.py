@@ -49,10 +49,16 @@ class BonusBomb(BaseBonus):
 
     def _is_player_collision(self):
         if super()._is_player_collision():
+            enemies = [
+                i for i in self.scene.transients if isinstance(i, BaseEnemy)
+            ]
+            for i in enemies:
+                blast.Blast(self.scene, i.rect)
             self.scene.transients = [
                 i for i in self.scene.transients if not isinstance(i, BaseEnemy)
-            ]    
+            ]
             return True
+
 
 class BonusBullet(BaseBonus):
     def __init__(self, scene):
@@ -63,8 +69,9 @@ class BonusBullet(BaseBonus):
 
     def _is_player_collision(self):
         if super()._is_player_collision():
-            if self.scene.player.bonus_active < 2:
-                self.scene.player.bonus_active += 1
+            if self.scene.player.bullet_bonus < 2:
+                self.scene.player.bullet_bonus += 1
+
 
 class BonusHealth(BaseBonus):
     def __init__(self, scene):
@@ -72,7 +79,7 @@ class BonusHealth(BaseBonus):
             scene=scene,
             image_filename='assets/images/bonus_ship/bonus_heart.png',
         )
-    
+
     def _is_player_collision(self):
         if super()._is_player_collision():
             if self.scene.hearts.hp < 3:
