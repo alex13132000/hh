@@ -8,7 +8,6 @@ IMG = 'assets/images/player_ship/player.png'
 SPAWN = [200, 600]
 SPEED = 5
 SHOT_DELAY = 500
-BONUS_DURATION = 10000
 SHOT_MP3 = 'assets/musics/shot.mp3'
 
 
