@@ -1,6 +1,5 @@
 import pygame
 
-import bonus
 import bullet
 
 
