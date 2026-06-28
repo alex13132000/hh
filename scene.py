@@ -6,6 +6,7 @@ import pygame
 
 import background
 import bonus
+import boss
 import bullet
 import button
 from enemy import SCurveRaiderI as scr1
@@ -67,16 +68,17 @@ class Scene:
         sys.exit()
 
     def _add_enemy(self):
-        now = time.monotonic()  # TODO: get_ticks
-        if now - self.last_enemy_timestamp >= ENEMY_DELAY:
-            while ...:
-                try:
-                    next_enemy = next(enemy_it)(self)
-                    break
-                except (StopIteration, NameError):
-                    enemy_it = iter(random.choice(self.spawn_patterns))
-            self.transients.append(next_enemy)
-            self.last_enemy_timestamp = now
+        if self.score.score > 2:
+            now = time.monotonic()  # TODO: get_ticks
+            if now - self.last_enemy_timestamp >= ENEMY_DELAY:
+                while ...:
+                    try:
+                        next_enemy = next(enemy_it)(self)
+                        break
+                    except (StopIteration, NameError):
+                        enemy_it = iter(random.choice(self.spawn_patterns))
+                self.transients.append(next_enemy)
+                self.last_enemy_timestamp = now
 
     def add_bonus(self):
         now = time.monotonic()
@@ -107,6 +109,7 @@ class Scene:
             b.update()
 
     def draw(self):
+
         self._background.draw()
         self.player.draw()
         for b in self.transients:
